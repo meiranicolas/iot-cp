@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Firestore Delete</title>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, getDocs, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDzbSW4Ii5I0ND89mk7SxKPqSl6fKI_SnI",
+      authDomain: "smart-receipt-analyzer-ed6b7.firebaseapp.com",
+      projectId: "smart-receipt-analyzer-ed6b7",
+      storageBucket: "smart-receipt-analyzer-ed6b7.firebasestorage.app",
+      messagingSenderId: "156821768097",
+      appId: "1:156821768097:web:9e1235d11cc3a1fe7aede0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.testFirestore = async function() {
+      const output = document.getElementById('output');
+      output.innerHTML = '🔍 Testing Firestore operations...\n\n';
+
+      try {
+        // List all receipts
+        output.innerHTML += '📋 Step 1: Fetching receipts...\n';
+        const receiptsRef = collection(db, 'receipts');
+        const snapshot = await getDocs(receiptsRef);
+
+        output.innerHTML += `✅ Found ${snapshot.size} receipts\n\n`;
+
+        if (snapshot.empty) {
+          output.innerHTML += '⚠️ No receipts found to delete.\n';
+          output.innerHTML += 'Create a receipt first, then try again.\n';
+          return;
+        }
+
+        // List receipts
+        output.innerHTML += '📝 Receipts:\n';
+        snapshot.forEach((doc, index) => {
+          const data = doc.data();
+          output.innerHTML += `${index + 1}. ID: ${doc.id}\n`;
+          output.innerHTML += `   Store: ${data.storeName || 'Unknown'}\n`;
+          output.innerHTML += `   Amount: R$ ${data.totalAmount || 0}\n`;
+          output.innerHTML += `   Image URI: ${data.imageUri ? data.imageUri.substring(0, 50) + '...' : 'None'}\n\n`;
+        });
+
+        // Try to delete the first receipt
+        const firstDoc = snapshot.docs[0];
+        output.innerHTML += `\n🗑️ Step 2: Attempting to delete first receipt (${firstDoc.id})...\n`;
+
+        await deleteDoc(doc(db, 'receipts', firstDoc.id));
+        output.innerHTML += '✅ DELETE SUCCESSFUL!\n\n';
+
+        // Verify deletion
+        output.innerHTML += '🔍 Step 3: Verifying deletion...\n';
+        const verifySnapshot = await getDocs(receiptsRef);
+        output.innerHTML += `✅ Now there are ${verifySnapshot.size} receipts\n\n`;
+
+        output.innerHTML += '✅ FIRESTORE DELETE WORKS CORRECTLY!\n';
+        output.innerHTML += '\nConclusion: Firestore permissions are OK.\n';
+        output.innerHTML += 'The issue must be in the app code or Alert behavior.\n';
+
+      } catch (error) {
+        output.innerHTML += `\n❌ ERROR: ${error.message}\n`;
+        output.innerHTML += `\nError details: ${JSON.stringify(error, null, 2)}\n`;
+
+        if (error.code === 'permission-denied') {
+          output.innerHTML += '\n⚠️ PERMISSION DENIED!\n';
+          output.innerHTML += '\nFix: Update Firestore rules in Firebase Console:\n';
+          output.innerHTML += 'rules_version = "2";\n';
+          output.innerHTML += 'service cloud.firestore {\n';
+          output.innerHTML += '  match /databases/{database}/documents {\n';
+          output.innerHTML += '    match /{document=**} {\n';
+          output.innerHTML += '      allow read, write: if true;\n';
+          output.innerHTML += '    }\n';
+          output.innerHTML += '  }\n';
+          output.innerHTML += '}\n';
+        }
+      }
+    };
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      document.getElementById('testBtn').click();
+    });
+  </script>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+    }
+    #output {
+      background: #252526;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      border: 1px solid #3e3e42;
+      min-height: 400px;
+    }
+    button {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    h1 {
+      color: #4EC9B0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Firestore Delete Test</h1>
+  <p>This will test if Firestore delete operations work correctly.</p>
+  <button id="testBtn" onclick="testFirestore()">🧪 Run Test</button>
+  <div id="output">Click the button to start testing...</div>
+</body>
+</html>
