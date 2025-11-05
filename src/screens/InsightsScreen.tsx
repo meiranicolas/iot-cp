@@ -126,47 +126,51 @@ export default function InsightsScreen() {
       {pieChartData.length > 0 && (
         <View style={styles.chartContainer}>
           <Text style={styles.chartTitle}>Gastos por Categoria</Text>
-          <PieChart
-            data={pieChartData}
-            width={screenWidth - 40}
-            height={220}
-            chartConfig={{
-              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            }}
-            accessor="amount"
-            backgroundColor="transparent"
-            paddingLeft="15"
-            absolute
-          />
+          <View style={styles.chartWrapper}>
+            <PieChart
+              data={pieChartData}
+              width={screenWidth - 80}
+              height={220}
+              chartConfig={{
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              }}
+              accessor="amount"
+              backgroundColor="transparent"
+              paddingLeft="15"
+              absolute
+            />
+          </View>
         </View>
       )}
 
       {monthlyData.length > 1 && (
         <View style={styles.chartContainer}>
           <Text style={styles.chartTitle}>Evolução Mensal</Text>
-          <LineChart
-            data={lineChartData}
-            width={screenWidth - 40}
-            height={220}
-            chartConfig={{
-              backgroundColor: '#fff',
-              backgroundGradientFrom: '#fff',
-              backgroundGradientTo: '#fff',
-              decimalPlaces: 2,
-              color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: {
-                borderRadius: 16,
-              },
-              propsForDots: {
-                r: '6',
-                strokeWidth: '2',
-                stroke: '#007AFF',
-              },
-            }}
-            bezier
-            style={styles.chart}
-          />
+          <View style={styles.chartWrapper}>
+            <LineChart
+              data={lineChartData}
+              width={screenWidth - 80}
+              height={220}
+              chartConfig={{
+                backgroundColor: '#fff',
+                backgroundGradientFrom: '#fff',
+                backgroundGradientTo: '#fff',
+                decimalPlaces: 2,
+                color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(30, 41, 59, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: '6',
+                  strokeWidth: '2',
+                  stroke: '#6366F1',
+                },
+              }}
+              bezier
+              style={styles.chart}
+            />
+          </View>
         </View>
       )}
 
@@ -225,63 +229,77 @@ function getColor(index: number): string {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F8FAFC',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F8FAFC',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    padding: 20,
-    color: '#333',
+    fontSize: 32,
+    fontWeight: '800',
+    padding: 24,
+    paddingTop: 28,
+    color: '#1E293B',
+    letterSpacing: 0.5,
   },
   summaryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    padding: 12,
+    gap: 12,
   },
   summaryCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
-    margin: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
     flex: 1,
     minWidth: '45%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 102, 241, 0.1)',
   },
   summaryLabel: {
     fontSize: 14,
-    color: '#666',
-    marginBottom: 5,
+    color: '#64748B',
+    marginBottom: 8,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   summaryValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#007AFF',
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#6366F1',
   },
   chartContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    margin: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    margin: 16,
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 12,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 102, 241, 0.1)',
   },
   chartTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 20,
+    color: '#1E293B',
+  },
+  chartWrapper: {
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   chart: {
     marginVertical: 8,
@@ -289,37 +307,46 @@ const styles = StyleSheet.create({
   },
   insightsContainer: {
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   insightsBox: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 12,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(139, 92, 246, 0.1)',
   },
   insightsText: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#333',
+    lineHeight: 26,
+    color: '#1E293B',
+    fontWeight: '500',
   },
   generateButton: {
-    backgroundColor: '#34C759',
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: '#14B8A6',
+    padding: 18,
+    borderRadius: 16,
     alignItems: 'center',
+    shadowColor: '#14B8A6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
   },
   regenerateButton: {
-    backgroundColor: '#007AFF',
-    marginTop: 10,
+    backgroundColor: '#6366F1',
+    marginTop: 12,
+    shadowColor: '#6366F1',
   },
   generateButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '700',
   },
   emptyContainer: {
     flex: 1,
@@ -328,12 +355,13 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   emptyText: {
-    fontSize: 64,
-    marginBottom: 20,
+    fontSize: 72,
+    marginBottom: 24,
   },
   emptyMessage: {
-    fontSize: 18,
-    color: '#666',
+    fontSize: 19,
+    color: '#64748B',
     textAlign: 'center',
+    fontWeight: '500',
   },
 });
